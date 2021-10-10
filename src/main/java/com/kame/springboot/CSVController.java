@@ -94,7 +94,9 @@ public class CSVController {
 				
 		String file_name = "/csv_result.csv"; //  拡張子も書く
 		// Fileクラスのオブジェクトを作成 ユーザのデスクトップにファイルを作ろうとしている
-		File file = new File(System.getProperty("user.home") + "/Desktop" + file_name);
+		// File file = new File(System.getProperty("user.home") + "/Desktop" + file_name);
+		
+		File file = new File("src/main/resources" + file_name);
 		
 		try {
 			file.createNewFile();  // その名前のファイルがまだ存在していない場合だけ、ファイルを作る。  戻り値は 指定されたファイルが存在せず、ファイルの生成に成功した場合はtrue、示されたファイルがすでに存在する場合はfalse
@@ -150,7 +152,8 @@ public class CSVController {
 		//  Flash Scop へ、インスタンスをセットできます。 Flash Scopは、１回のリダイレクトで有効なスコープです。 Request Scope より長く、Session Scope より短いイメージ
 		// addFlashAttributeメソッドです  Flash Scope 使う RedirectAttributes redirectAttributes をリクエストハンドラの引数に書く
 		redirectAttributes.addFlashAttribute("employeeList", employeeList); // セッションスコープから取得したものを、またセットする
-		String flashMsg = "デスクトップに CSVファイルを出力しました。";
+		// String flashMsg = "デスクトップに CSVファイルを出力しました。";
+		String flashMsg = " CSVファイルを出力しました。";
 		redirectAttributes.addFlashAttribute("flashMsg", flashMsg);
 		redirectAttributes.addFlashAttribute("action", "csv");
 		// リダイレクトする
