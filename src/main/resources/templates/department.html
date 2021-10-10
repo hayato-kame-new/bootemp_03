@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="|#{department_page.title} - ${title} |"></title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+div {
+	margin-bottom: 15px;
+}
+.err { color: red; }
+.flashMsg { color: skyblue; }
+</style>
+</head>
+<body>
+<a href="/" th:href="@{/}">トップページへ</a>
+<a href="/employee" th:href="@{/employee}">社員一覧ページへ</a>
+	<hr/>
+	<h3 th:text="部署一覧"></h3>
+	<p th:if="${departmentList == null }" th:text="現在登録されている部署はありません。">
+	<p th:if="${flashMsg != null}" th:text="${flashMsg}" class="flashMsg">
+	<table>
+		<tr><th>部署ID</th><th>部署名</th><th></th><th></th></tr>
+		<tr th:each="department : ${departmentList}" >
+			<td th:text="${department.departmentId}"></td>
+			<td th:text="${department.departmentName}"></td>
+			<td >
+				 <form method="get" action="/dep_add_edit" th:object="${formModel}">
+					<!-- フォームでGETアクセスだと、hiddenタグで送ったものは、URL末尾の?以降のクエリー文字列で送られます。method="get"を省略しても大丈夫、デフォルトでGET -->
+					<input type="hidden" name="departmentId" th:value="${department.departmentId}" />
+					<input type="hidden" name="departmentName" th:value="${department.departmentName}" /> 
+					<input type="hidden" name="action" value="depEdit" />
+					<input type="submit" value="編集" /> 
+	 			</form>
+			</td>
+			<td >
+				<!-- 削除には、プライマリーキーの値だけ必要です あと actionも送る -->
+				<form method="post" action="/dep_delete">
+					<!-- POSTで送る。POSTだと、リクエストボディにデータが入って送られる。フォームでは、method="post"を書かないと、デフォルトのGETになってしまう -->
+					<input type="hidden" name="departmentId" th:value="${department.departmentId}" />
+					<input type="hidden" name="action" th:value="delete" />
+					<input type="submit" value="削除" />
+				</form>
+			</td>
+		</tr>
+	</table>
+
+	<a href="/dep_add_edit?action=depAdd" th:href="@{/dep_add_edit(action = 'depAdd')}" ><button type="button">新規作成</button></a>
+
+</body>
+</html>

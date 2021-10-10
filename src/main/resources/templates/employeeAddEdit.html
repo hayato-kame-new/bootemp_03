@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="|#{employee_page.title} - ${title} |"></title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+.err { color: red; font-size: 80%;}
+.msg { color: skyblue; }
+.input { color: red; }
+div {
+	margin-bottom: 15px;
+}
+
+</style>
+</head>
+<body>
+
+<p class="msg" th:if="${msg}" th:text="${msg}" ></p>
+<p class="msg" th:if="${flashMsg}" th:text="${flashMsg}" ></p>
+<a href="/employee" th:href="@{/employee}">社員一覧ページへ戻る</a><br />
+<hr/>
+	<h3 th:text="'社員' + (${action == 'add'} ? '新規作成' : '編集') + 'ページ'"></h3>
+
+<p>(<small class="input">※</small>)印は、入力必須です。</p>
+<form action="/emp_add_edit" method="post" enctype="multipart/form-data" th:object="${formModel}">
+
+	<ul>
+		<li th:each="error : ${#fields.detailedErrors()}" class="err" th:text="${error.message}" />
+    </ul>
+
+	<input type="hidden" name="action" th:value="${action}" />
+	<input type="hidden" name="employeeId" th:value="*{employeeId}" />
+	
+	<p th:unless="${formModel.employeeId} == null" th:text="|社員ID: *{employeeId}|"></p>
+
+	<div>
+		<label for="name">名前(<small class="input">※</small>)</label>: 
+		<input type="text" id="name" name="name" th:value="*{name}" th:errorclass="err" />
+		<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="err">
+		</div>				
+	</div>
+	
+	<div>
+		<label for="age">年齢(<small class="input">※</small>)</label>: 
+		<input type="text" id="age" name="age" th:value="*{age}" th:errorclass="err" />		
+		<div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" th:errorclass="err">
+		</div>				
+	</div>
+	
+	<div>
+		<label for="gender">性別(<small class="input">※</small>)</label>:
+	    <input th:each="element : ${genderMap}" type="radio" name="gender" th:value="${element.key}" th:text="${element.value}" th:field="*{gender}" th:checked="${element.key ==  formModel.gender}" th:errorclass="err"/>
+		<div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" th:errorclass="err">
+		</div>
+	</div>
+	
+	<!-- 写真の表示 -->
+ 	<div>
+ 	写真: 
+ 	<!-- ? 以降のクエリーパラメータをつけたGETアクセスです。  /getImg?photo=1   とかのクエリー文字列つきのURLになる -->
+ 	 <img th:src="@{/getImg(photoId = ${formModel.photoId})}"  alt="写真" title="社員の写真" width="250" height="250" /> 
+ 	</div>
+ 	<!-- 写真の表示 ここまで -->
+ 	
+ 	<!-- 写真のアップロード formタグには enctype="multipart/form-data" が必要  また、リクエストハンドラの引数に MultipartFile  multipartFile が必要-->
+ 	(<small class="input">※</small>)
+ 	 <input type="file" name="upload_file" accept=".jpeg, .jpg, .png" />
+ 	<input type="hidden" name="photoId" th:value="*{photoId}"  />
+	<div th:if="${#fields.hasErrors('photoId')}" th:errors="*{photoId}" th:errorclass="err">
+		</div> 	
+ 	<!-- 写真のアップロード ここまで -->
+ 	
+ 	<div>
+    	<small>半角数字で ×××-×××× の形式で入力してください。</small><br />
+ 		<label for="zipNumber">郵便番号(<small class="input">※</small>)</label>: 
+ 		<input type="text" id="zipNumber" name="zipNumber" th:value="*{zipNumber}" th:errorclass="err" />
+ 		<p th:if="${#fields.hasErrors('zipNumber')}" th:errors="*{zipNumber}" th:errorclass="err">
+		</p>  
+    </div>
+ 	
+ 	<div>
+ 		<label for="pref"  >都道府県(<small class="input">※</small>)</label>:
+ 		<select id="pref" name="pref" size="1" th:errorclass="err" >
+        	<option th:each="element : ${prefMap}" th:value="${element.value}" th:selected="${element.value ==  formModel.pref}" th:inline="text">[[${element.value}]]</option>
+    	</select>
+ 		 <p th:if="${#fields.hasErrors('pref')}" th:errors="*{pref}" th:errorclass="err"> </p>
+ 	</div>
+ 	
+ 	<div>
+		<label for="address">住所(<small class="input">※</small>)</label>: 
+		<input type="text" id="address" name="address" th:value="*{address}" th:errorclass="err"/>
+		<div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" th:errorclass="err">
+		</div>	
+	</div>
+ 	
+ 	<div>
+ 		<label for="departmentId">所属(<small class="input">※</small>)</label>: 
+ 		<select id="departmentId" name="departmentId"  size="1"  th:errorclass="err">
+        	<option th:each="element : ${depMap}" th:value="${element.key}" th:selected="${element.key == formModel.departmentId}" th:inline="text">[[${element.value}]]</option>
+    	</select>
+ 		<div th:if="${#fields.hasErrors('departmentId')}" th:errors="*{department.departmentId}" th:errorclass="err">
+		</div>		
+ 	</div>
+ 	
+ 	<div>
+    	<small>半角数字で ××××-××-×× の形式で入力してください。 例( 2016-03-20 )</small><br />
+    	<label for="hireDate">入社日(<small class="input">※</small>)</label>: 
+    	 <input type="text" name="hireDate" th:value="${#dates.format(formModel.hireDate, 'yyyy-MM-dd')}" th:errorclass="err"> 
+    	<div th:if="${#fields.hasErrors('hireDate')}" th:errors="*{hireDate}" th:errorclass="err">
+		</div>
+ 	</div>
+ 	
+ 	<div>
+    	<small>半角数字で ××××-××-×× の形式で入力してください。 例( 2016-03-20 )</small><br />
+    	<label for="retirementDate">退社日</label>: 
+    	<input type="text" name="retirementDate" th:value="${#dates.format(formModel.retirementDate, 'yyyy-MM-dd')}" th:errorclass="err">
+    	<div th:if="${#fields.hasErrors('retirementDate')}" th:errors="*{retirementDate}" th:errorclass="err">
+		</div>
+ 	</div>
+ 	
+ 	<div>
+ 	<input type="submit" value="送信" />
+	</div>
+</form>
+
+<!-- Thymeleafリンク式  aタグは HTTPメソッドは GET  なので URLの末尾に ?以降のクエリー文字列で送られる -->
+<!-- リンクURL式（th:hrefのこと）には大きく分けて クエリ形式  REST形式  の2つが存在し、SpringのController側の@RequestMappingでURLとして受け取る場合は「Rest形式」を使う -->
+<a href="employee.html" th:href="@{/employee}"><button type="button" th:text="キャンセル" ></button></a>
+</body>
+</html>

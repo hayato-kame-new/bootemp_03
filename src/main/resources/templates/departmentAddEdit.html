@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="|#{department_page.title} - ${title} |"></title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+div {
+	margin-bottom: 15px;
+}
+.err { color: red; font-size: 80%;}
+.msg { color: red; }
+</style>
+</head>
+<body>
+	<a href="/department" th:href="@{/department}">部署一覧ページへ戻る</a><br />
+	<hr/>
+	<h3 th:text="'部署' + (${action == 'depAdd'} ? '新規作成' : '編集') + 'ページ'"></h3>	
+	
+	<p class="msg" th:if="${msg}" th:text="${msg}" ></p>
+	
+	<form method="post" action="/dep_add_edit" th:object="${formModel}">	
+		
+		<input type="hidden" name="departmentId" th:value="*{departmentId}" /> 
+				
+		<input type="hidden" name="action" th:value="${action}" />
+		<label for="departmentName">部署名: </label>	
+		<input type="text" id="departmentName" name="departmentName" th:value="*{departmentName}" th:errorclass="err" />
+		<p th:if="${#fields.hasErrors('departmentName')}" th:errors="*{departmentName}" th:errorclass="err">
+		</p>				
+		<input type="submit" />
+	</form>
+	
+</body>
+</html>

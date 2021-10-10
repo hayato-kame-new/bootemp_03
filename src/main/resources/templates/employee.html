@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="|#{employee_page.title} - ${title} |"></title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+div {
+	margin-bottom: 15px;
+}
+.err { color: red; }
+.flash { color: skyblue; }
+</style>
+</head>
+<body>
+<a href="/" th:href="@{/}">トップページへ</a>
+<a href="/department" th:href="@{/department}">部署一覧ページへ</a><br />
+<th:block th:if="${#strings.equals(action, 'find') || #strings.equals(action, 'csv')}">
+	<a href="/employee" th:href="@{/employee}">社員一覧ページへ</a>
+</th:block>
+<hr />
+<h3 th:text="社員ページ"></h3>
+
+<p class="flash" th:if="${flashMsg != null}" th:text="${flashMsg}"></p>
+
+<th:block th:unless="${employeeList.size() == 0}">
+	<table>
+		<tr><th>社員ID</th><th>名前</th><th></th><th></th></tr>
+		
+		<tr th:each="obj : ${employeeList}" th:object="${obj}">	
+			<td th:text="${obj[0]}"></td>
+			<td th:text="${obj[1]}"></td> 
+			<td>
+				 <form method = "get" action = "/emp_add_edit" >
+				 	<input type="hidden" name="employeeId" th:value="${obj[0]}" >
+				 	<input type="hidden" name="action" th:value="edit" >
+				 	<input type="submit" value="編集" >
+				 </form>		
+			</td>
+			<td>
+				<form method = "post" action = "/emp_delete" >
+					<input type="hidden" name="employeeId" th:value="${obj[0]}" >
+					<input type="submit" value="削除" >
+				</form>		
+			</td>
+		</tr> 
+	</table>
+	
+	<!-- aリンクは、HTTPメソッドではGET URLパスの末尾?以降がクエリーパラメータとしてコントローラの対応するリクエストハンドラに送られる -->
+	<div>
+	<a href="/emp_add_edit?action=add" th:href="@{/emp_add_edit(action = 'add')}"><button type="button" th:text="新規追加"></button> </a>
+	</div>
+</th:block>
+<div>
+<a href="/find" th:href="@{/find}"><button type="button" th:text="検索..." ></button></a>
+</div>
+
+<th:block th:unless="${employeeList.size() == 0}">
+	<div>
+	<a href="/csv" th:href="@{/csv}"><button type="button" th:text="CSVファイルに出力" ></button></a>(<small >※CSVファイルをデスクトップに出力します</small>)
+	</div>
+</th:block>
+</body>
+</html>

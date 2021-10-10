@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Insert title here</title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+div {
+	margin-bottom: 15px;
+}
+.err { color: red; }
+</style>
+</head>
+<body>
+
+<h2>社員管理トップページ</h2>
+<a href="/employee" th:href="@{/employee}">社員一覧ページへ</a><br />
+<a href="/department" th:href="@{/department}">部署一覧ページへ</a><br />
+
+</body>
+</html>

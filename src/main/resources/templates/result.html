@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="|#{result_page.title} - ${title} |"></title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+div {
+	margin-bottom: 15px;
+}
+.err { color: red; }
+.msg { color: lightsteelblue; }
+</style>
+</head>
+<body>
+結果ページです
+
+<p class="msg" th:text="${msg}"></p>
+
+<th:block th:if="${#strings.equals(action, 'depAdd')  || #strings.equals(action, 'depEdit')}">
+	<a th:href="@{/department}" >部署一覧ページへ戻る</a>	
+</th:block>
+
+<th:block th:if="${#strings.equals(action, 'add')  || #strings.equals(action, 'edit')}">
+	<a th:href="@{/employee}" >社員一覧ページへ戻る</a>	
+</th:block>
+
+</body>
+</html>

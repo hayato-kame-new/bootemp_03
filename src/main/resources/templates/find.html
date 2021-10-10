@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="|#{find_page.title} - ${title} |" ></title>
+<style>
+h1 {
+font-size: 24px; font-weight:bold; color:gray;}
+body {
+font-size: 17px; color: gray; margin: 5px 25px;}
+pre {
+font-size: 17px; color:gray; padding:5px 10px; border:1px solid gray;
+}
+tr {
+margin: 5px;
+}
+th {
+padding: 5px; color:white; background:darkgray;
+}
+td {
+padding: 5px; color:black; background:#f0f0f0;
+}
+div {
+	margin-bottom: 15px;
+}
+.err { color: red; }
+</style>
+</head>
+<body>
+	<a href="/employee" th:href="@{/employee}">社員一覧ページへ戻る</a>
+	<hr />
+	<h3 th:text="条件を指定して社員情報を検索します"></h3>	
+	<form action="/find" method="post">
+		<table>
+	 		<tr><td style="width:13ch;" ><label for="departmentId">所属: </label></td>
+	 			<td ><select id="departmentId" name="departmentId"  size="4" style="width:150px;">
+			 		    <option value="" th:text="選択しない"></option>
+			        	<option th:each="element : ${depMap}" th:value="${element.key}"  th:inline="text">[[${element.value}]]</option>
+			    	</select>
+		    	</td>
+	    	</tr>
+			<tr><td><label for="employeeId">社員ID: </label></td>
+				<td><input type="text" id="employeeId" name="employeeId" th:value="${employeeId}"  /></td>
+			</tr>			
+			<tr><td><label for="word">名前に含む文字: </label></td> 
+				<td><input type="text" id="word" name="word" th:value="${word}"  /></td>
+			</tr>
+			<tr><td></td><td><input type="submit" value="検索" /></td></tr>
+		</table>	
+		<input type="hidden" name="action" value="${action}" />
+	</form>
+</body>
+</html>
