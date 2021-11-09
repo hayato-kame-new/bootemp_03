@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -144,11 +145,13 @@ public class EmployeeService {  // リレーションの従テーブル
 	 * 社員IDを生成する
 	 * @return getGeneratedEmpId
 	 */
-	public String generateEmpId() {
+	public String generateEmpId() throws NoResultException{
 		// まず、最後尾の社員IDをとってくる order by 辞書順で並べ替えて、desc をして limit 1
 		// createNativeQuery メソッドは、JPQLではなくて普通のSQL文です employeeid カラムは、全てを小文字にすること postgreSQLだから テーブル名 カラム名 全て小文字
 		Query query = entityManager
 				.createNativeQuery("select employeeid from employee order by employeeid desc limit 1");
+		
+		// getSingleResult() 見つからない時は、NoResultExceptionを発生させるので このメソッドをthrows宣言する
 		String lastStringEmpId = (String) query.getSingleResult();// 戻り値は、型のないObjectになるので、キャストする
 		int plusOne = Integer.parseInt(lastStringEmpId.substring(3)) + 1;
 		String getGeneratedEmpId = String.format("EMP%04d", plusOne);
